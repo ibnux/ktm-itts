@@ -138,6 +138,11 @@
             ctx.drawImage(img, 0, 0);
             ctx.drawImage(pas, 100, 760, 340, 440);
             if (tipeKartu == 'qrcode') {
+                ctx.beginPath();
+                ctx.lineWidth = "20";
+                ctx.strokeStyle = "white";
+                ctx.rect(1600, 900, 320, 320);
+                ctx.stroke();
                 ctx.drawImage(tipe, 1600, 900, 320, 320);
             } else {
                 ctx.drawImage(tipe, 1500, 1000, 480, 252);

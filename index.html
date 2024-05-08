@@ -69,8 +69,17 @@
                                 Flazz
                             </label>
                         </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="tipe" value="qrcode" id="qrcode"
+                                onclick="changeTipe(this)">
+                            <label class="form-check-label" for="qrcode">
+                                QRCode
+                            </label>
+                        </div>
                     </div>
-                    <input type="file" id="fileInp" onchange="readImage(this)">
+                    Pas Foto 4x6<br>
+                    <input type="file" id="fileInp" onchange="readImage(this)"><br>
+                    <a href="passfoto.jpg">Template Foto</a>
                 </div>
                 <br>
                 <center>
@@ -82,10 +91,12 @@
                     dibuat oleh <a href="https://github.com/ibnux">ibnux</a>
                 </center>
                 <br>
+                <div id="qrcodes" style="display: none;"></div>
             </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src="qrcode.js"></script>
     <script>
         var text_title = "1234567890123456789012345678901234567890";
         var nomor = "1234567890123";
@@ -101,6 +112,8 @@
         var tipe = new Image();
         tipe.crossOrigin = "anonymous";
         var pdf = new jsPDF('l', 'mm', [canvas.width, canvas.height]);
+        var tipeKartu = 'emoney';
+        var qrcode = null;
 
         window.addEventListener('load', DrawPlaceholder)
         function DrawPlaceholder() {
@@ -117,13 +130,18 @@
             tipe.onload = function () {
                 DrawText()
             }
-            tipe.src = 'emoney.png?';
+            tipe.src = tipeKartu + '.png?';
         }
+
         function DrawText() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
             ctx.drawImage(pas, 100, 760, 340, 440);
-            ctx.drawImage(tipe, 1500, 1000, 480, 252);
+            if (tipeKartu == 'qrcode') {
+                ctx.drawImage(tipe, 1600, 900, 320, 320);
+            } else {
+                ctx.drawImage(tipe, 1500, 1000, 480, 252);
+            }
             ctx.fillStyle = "rgba(255, 255, 255, 1)";
             ctx.textBaseline = 'middle';
             ctx.font = "70px 'Arial'";
@@ -140,7 +158,27 @@
         }
 
         function changeTipe(input) {
-            tipe.src = input.value + '.png';
+            tipeKartu = input.value;
+            if (input.value == 'qrcode') {
+                if(qrcode==null){
+                    qrcode = new QRCode(document.getElementById("qrcodes"), {
+                        text: "https://pddikti.kemdikbud.go.id/search/" + nomor,
+                        width: 512,
+                        height: 512,
+                        colorDark: "#0764bc",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }else{
+                    qrcode.clear();
+                    qrcode.makeCode("https://pddikti.kemdikbud.go.id/search/" + nomor);
+                }
+                setTimeout(() => {
+                    tipe.src = document.getElementById("myqrcode").src;
+                }, 1000);
+            } else {
+                tipe.src = input.value + '.png';
+            }
         }
 
         function DynamicText(img) {
@@ -151,6 +189,13 @@
             document.getElementById('nomor').addEventListener('keyup', function () {
                 nomor = this.value;
                 DrawText();
+                if (tipeKartu == 'qrcode' && qrcode != null) {
+                    qrcode.clear();
+                    qrcode.makeCode("https://pddikti.kemdikbud.go.id/search/" + nomor);
+                    setTimeout(() => {
+                        tipe.src = document.getElementById("myqrcode").src;
+                    }, 1000);
+                }
             });
             document.getElementById('kartu').addEventListener('keyup', function () {
                 kartu = this.value;

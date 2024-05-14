@@ -54,6 +54,22 @@
                         <input type="text" class="form-control" id="kartu" value="1234 5678 9012 3456"
                             placeholder="1234 5678 9012 3456">
                     </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>NOMOR KARTU baris 1</label>
+                                <input type="text" class="form-control" id="kartu1" value="1234 5678"
+                                    placeholder="1234 5678">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>NOMOR KARTU baris 2</label>
+                                <input type="text" class="form-control" id="kartu2" value="9012 3456"
+                                    placeholder="9012 3456">
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" id="emoney" checked name="tipe" value="emoney"
@@ -98,10 +114,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
     <script src="qrcode.js"></script>
     <script>
-        var text_title = "1234567890123456789012345678901234567890";
         var nomor = "1234567890123";
         var nama = "CANTIK BAHENOL";
         var kartu = "1234 5678 9012 3456";
+        var kartu1 = "1234 5678";
+        var kartu2 = "9012 3456";
 
         var canvas = document.getElementById('imageCanvas');
         var ctx = canvas.getContext('2d');
@@ -154,6 +171,8 @@
             ctx.fillText(nomor, 490, 1120);
             ctx.font = "120px 'ocr_a_std'";
             ctx.fillText(kartu, 200, 580);
+            ctx.fillText(kartu1, 1000, 490);
+            ctx.fillText(kartu2, 1000, 690);
         }
 
         function readImage(input) {
@@ -204,6 +223,14 @@
             });
             document.getElementById('kartu').addEventListener('keyup', function () {
                 kartu = this.value;
+                DrawText();
+            });
+            document.getElementById('kartu1').addEventListener('keyup', function () {
+                kartu1 = this.value;
+                DrawText();
+            });
+            document.getElementById('kartu2').addEventListener('keyup', function () {
+                kartu2 = this.value;
                 DrawText();
             });
         }
